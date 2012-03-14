@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<project name="Resident Raver Build" basedir="." default="full-build">
+
+    <property name="project.name"  value="resident-raver"/>
+    <property name="project.version"  value="0.2.0-alpha"/>
+    <property name="project.description"  value="Jetroid: Explore, Discover, Survive"/>
+    <property name="project.url"  value="http://gamecook.com/games/jetroid/"/>
+    <property name="impact.dir" value="${basedir}/impact"/>
+    <property name="deploy.dir"  value="deploy"/>
+    <property name="web.dir"  value="${deploy.dir}/web"/>
+    <property name="chrome.dir"  value="${deploy.dir}/chrome"/>
+
+
+    <target name="full-build">
+
+        <!-- Clean -->
+
+        <delete dir="${deploy.dir}"/>
+
+        <!-- Run the bake script - you need PHP to be runnable from the command line. -->
+        <exec dir="${impact.dir}" executable="php">
+            <arg value="${impact.dir}/tools/bake.php"/>
+            <arg value="lib/impact/impact.js"/>
+            <arg value="lib/game/main.js"/>
+            <arg value="game.min.js"/>
+        </exec>
+
+        <!-- Copy over the impact directory to the deploy folder and ignore what is not needed. -->
+        <sync todir="${web.dir}">
+            <fileset dir="${impact.dir}">
+                <exclude name="weltmeister.html"/>
+                <exclude name="**/tools/*"/>
+                <exclude name="**/lib/**"/>
+            </fileset>
+        </sync>
+
+        <!-- replace js source paths in HTML with minified game js. Make sure code is surrounded by "source script" comments so the regex can find it. -->
+        <replaceregexp file="${web.dir}/index.html"
+                       match="\&lt;!--source scripts--\&gt;(.*?)\&lt;!--end source scripts--\&gt;"
+                       replace="\&lt;script src='game.min.js'\&gt;\&lt;/script\&gt;" flags="gs">
+        </replaceregexp>
+        <!-- This will copy over debug CSS if game is running in debug mode. -->
+
+        <copy file="${impact.dir}/lib/impact/debug/debug.css"
+              tofile="${web.dir}/lib/impact/debug/debug.css"/>
+
+        <!-- Create chrome market app -->
+        <sync todir="${chrome.dir}/tmp">
+            <fileset dir="${web.dir}">
+
+            </fileset>
+        </sync>
+
+        <echo file="${chrome.dir}/tmp/manifest.json" append="false">
+            {
+                "name": "${project.name}",
+                "description": "${project.description}",
+                "version": "${project.version}",
+                "icons": {
+                    "16": "images/icons/icon-16x16.png",
+                    "48": "images/icons/icon-48x48.png",
+                    "128": "images/icons/icon-128x128.png"
+                },
+                "app": {"launch": {
+                    "local_path": "index.html"
+                }},
+                "homepage_url": "${project.url}"
+            }
+        </echo>
+
+        <zip destfile="${chrome.dir}/${project.name}-${project.version}.zip" basedir="${chrome.dir}"/>
+
+        <delete dir="${chrome.dir}/tmp/"/>
+        <delete file="${impact.dir}/game.min.js"/>
+
+    </target>
+
+</project>

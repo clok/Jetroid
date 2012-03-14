@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Resident Raver</title>
+	<style type="text/css">
+		html,body {
+			background-color: #000;
+			color: #fff;
+			font-family: helvetica, arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			font-size: 12pt;
+		}
+		#gameWrapper
+        {
+            width: 720px;
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: 0 auto;
+        }
+		#canvas {
+
+			border: 1px solid #555;
+		}
+	</style>
+
+    <script type="text/javascript">
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-18884514-10']);
+        _gaq.push(['_trackPageview']);
+
+        (function() {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+	<!--source scripts-->
+    <script type="text/javascript" src="lib/impact/impact.js"></script>
+    <script type="text/javascript" src="lib/game/main.js"></script>
+	<!--end source scripts-->
+
+    
+</head>
+<body>
+	<div id="gameWrapper">
+        <h3>Warning</h3>
+        <p>This is a preview build of Jetroid and may contain bugs, be completely unbalanced, or not correctly save your progress. Play at your own risk.</p>
+        <canvas id="canvas"></canvas>
+        <h3>Instructions</h3>
+        <p>Left/Up/Right or A/W/D keys move. Esc pauses the game and Q quits while a game is paused. Try to collect as much as you can find before your air runs. Fly into the exit at any time to end the game.</p>
+        </div>
+
+</body>
+</html>
